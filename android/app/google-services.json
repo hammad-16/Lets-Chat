@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "323986191759",
+    "project_id": "lets-chat-507df",
+    "storage_bucket": "lets-chat-507df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323986191759:android:43fb36626fc697136d87fa",
+        "android_client_info": {
+          "package_name": "com.example.chatting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323986191759-sg195q49ruor5tt2hb3t7kufen8kse7o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chatting",
+            "certificate_hash": "289c0791cdd75195283cf79e5acc015624c0fb25"
+          }
+        },
+        {
+          "client_id": "323986191759-n5r1ni8spmgdnut6mvb11cblp4o2a3ua.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPCfSHggbSduU0QwRByPQ3-gx8DqaMWZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "323986191759-n5r1ni8spmgdnut6mvb11cblp4o2a3ua.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "323986191759-2ucfpr4iq12r3uboq8al3p70glov296i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatting"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
