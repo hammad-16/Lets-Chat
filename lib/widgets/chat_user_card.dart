@@ -26,12 +26,17 @@ class _ChatUserCardState extends State<ChatUserCard> {
       onTap:(){},
       child: ListTile(
         //pfp
-        leading: CachedNetworkImage(
-          imageUrl: "http://via.placeholder.com/350x150",
-         // placeholder: (context, url) => CircularProgressIndicator(),
-          errorWidget: (context, url, error) =>const CircleAvatar(
-       child: Icon(Icons.person),
-     ),
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(mq.height* 0.3),
+          child: CachedNetworkImage(
+            width: mq.height*.055,
+            height: mq.height* .055,
+            imageUrl: widget.user.image,
+           // placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) =>const CircleAvatar(
+                 child: Icon(Icons.person),
+               ),
+          ),//We have used this for the display picture, using CachedNetworkImage
         ),
         // leading: const CircleAvatar(
         //   child: Icon(Icons.person),
@@ -40,8 +45,15 @@ class _ChatUserCardState extends State<ChatUserCard> {
           title:Text(widget.user.name),
               //Last message
           subtitle: Text(widget.user.about, maxLines: 1,),
-        trailing: Text("4:30 PM"),
+        // trailing: Text("4:30 PM"),
+        // Last message time.
 
+        trailing: Container(width:15, height: 15,
+        decoration: BoxDecoration( 
+        color: Colors.greenAccent.shade400,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        ) // For a green dot
       )
         ),
     );

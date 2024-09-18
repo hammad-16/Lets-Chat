@@ -45,6 +45,11 @@ dependencies:
   cloud_firestore: ^4.15.8
 #for storing network images
   cached_network_image: ^3.3.1
+#for picking images
+  image_picker: ^1.0.8
+  #for accessing Firebase storage (for uploading files)
+  firebase_storage: ^11.6.9
+
 
 
 
