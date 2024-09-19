@@ -116,4 +116,8 @@ static  Future<bool> userExists() async{
           });
     });
   }
+
+  ///Chat Screen Related APIs*********************
+///
+
 }
