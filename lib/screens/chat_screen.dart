@@ -1,10 +1,15 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatting/models/chat_user.dart';
 import 'package:flutter/material.dart';
 
 import '../api/apis.dart';
 import '../main.dart';
+import '../models/message.dart';
 import '../widgets/chat_user_card.dart';
+import '../widgets/message_card.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
@@ -15,6 +20,10 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  // Here I'll be storing all the messages in the list.
+  List<Message> _list = [];
+  final _textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -23,33 +32,33 @@ class _ChatScreenState extends State<ChatScreen> {
           automaticallyImplyLeading: false,
           flexibleSpace:  _appBar(),
         ),
+       // backgroundColor: Color.fromARGB(255, 128, 128, 128),
         body: Column(
           children: [
             Expanded(
               child: StreamBuilder(
                 // gives right to access any collection. We can query the data in form of snapshots
                 //   stream: APIs.getAllUsers(),
-              stream: null,
+              stream: APIs.getAllMessages(widget.user),
                   builder: (context, snapshot)
                   {
                     switch(snapshot.connectionState)
                     {
                       case ConnectionState.waiting:
                       case ConnectionState.none:
-                        // return const Center(
-                        //     child: CircularProgressIndicator()
-                        // );
+                        return SizedBox();
               
                     //If some data is thereto show then go ahead->
                       case ConnectionState.done:
                       case ConnectionState.active:
               
               
-                        // final data = snapshot.data?.docs;
-                        // names = data?.map((e) => ChatUser.fromJson(e.data())).toList() ??[];
-                        // // Remember mapping, an alternative to traverse the list, return an empty list, if no data available.
-                    final _list =[];
-              
+                        final data = snapshot.data?.docs;
+
+                         _list =
+                             data?.map((e) => Message.fromJson(e.data())).toList() ??[];
+                       // Remember mapping, an alternative to traverse the list, return an empty list, if no data available.
+
                         if(_list.isNotEmpty)
                         {
                           return ListView.builder(
@@ -58,7 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               padding: EdgeInsets.only(top: mq.height *0.01),
                               itemBuilder: (context,index)
                               {
-                                return  Text("Message: ${index}");
+                                return  MessageCard(message: _list[index],);
               
                               }
                           );
@@ -153,7 +162,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   icon: Icon(Icons.emoji_emotions, size: 24),
                   color: Colors.blue,
                 ),
-                const Expanded(child: TextField(
+                 Expanded(child: TextField(
+                  controller: _textController,
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   decoration: const InputDecoration(
@@ -179,7 +189,15 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
                 ),
         ),
-        MaterialButton(onPressed: (){},
+        MaterialButton(
+        onPressed: (){
+          if(_textController.text.isNotEmpty)
+            {
+              APIs.sendMessage(widget.user, _textController.text);
+              _textController.text ='';
+            }
+
+        },
             minWidth: 0,
             padding: EdgeInsets.only(top:10, bottom:10,right:5, left:10 ),
             shape: CircleBorder(),child: Icon(Icons.send, color: Colors.white, size:28),color: Colors.black)
