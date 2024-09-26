@@ -103,11 +103,11 @@ class APIs {
     log("Extesnion:$ext");
 
     //Storage file reference with path
-    final ref = storage.ref().child('profile_pictures/${user.uid}');
+    final ref = storage.ref().child('profile_pictures/${user.uid}.$ext');
     await ref.putFile(file, SettableMetadata(contentType: 'image/$ext')).then((
         p0) async {
       log('Data transferred: ${p0.bytesTransferred / 1000} kb');
-
+    });
       //Updating image in firestore database
       me.image = await ref.getDownloadURL();
       await
@@ -118,7 +118,7 @@ class APIs {
             'image': me.image,
 
           });
-    });
+
   }
 
   ///Chat Screen Related APIs*********************
@@ -139,9 +139,9 @@ class APIs {
     //where clause here is specifying that id should not be equal to our current userid
   }
 
-  //For sending images.
+  //For sending message.
 
-  static Future<void> sendMessage(ChatUser chatUser, String msg) async {
+  static Future<void> sendMessage(ChatUser chatUser, String msg, Type type) async {
     final time = DateTime
         .now()
         .millisecondsSinceEpoch
@@ -152,7 +152,7 @@ class APIs {
         msg: msg,
         toId: chatUser.id,
         read: '',
-        type: Type.text,
+        type: type,
         fromid: user.uid,
         sent: time);
     final ref = firestore.collection(
@@ -170,4 +170,38 @@ class APIs {
         .toString()});
 
   }
+
+  //Get only last message of a specific chat
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getLastMessages(
+      ChatUser user)
+  {
+    return firestore
+        .collection('chats/${getConversationID(user.id)}/messages/')
+    .orderBy('sent', descending: true)
+    .limit(1)
+        .snapshots();
+  }
+  //send chat image
+  static Future <void> sendChatImage(ChatUser chatuser, File file)
+  async {
+    //Getting image file extension
+    final ext = file.path.split('.'),
+        last;
+
+
+    //Storage file reference with path
+    final ref = storage.ref().child('images/${getConversationID(chatuser.id)}/${DateTime.now().millisecondsSinceEpoch}.$ext');
+    //Uploading image
+    await ref.putFile(file, SettableMetadata(contentType: 'image/$ext')).then((
+        p0) async {
+      log('Data transferred: ${p0.bytesTransferred / 1000} kb');
+    });
+    //Updating image in firestore database
+    final imageUrl = await ref.getDownloadURL();
+    await sendMessage(chatuser, imageUrl, Type.image);
+
+  }
+
+
+
 }

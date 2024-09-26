@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatting/helper/my_date_util.dart';
 import 'package:flutter/material.dart';
 
@@ -28,17 +29,33 @@ class _MessageCardState extends State<MessageCard> {
       children: [
         Flexible(
           child: Container(
-            padding: EdgeInsets.all(mq.width*0.04),
+            padding: EdgeInsets.all(widget.message.type==Type.image?
+            mq.width*0.03:
+                mq.width*0.04
+            ),
             margin: EdgeInsets.symmetric(horizontal: mq.width*0.04, vertical: mq.width*0.01),
             decoration: BoxDecoration(color: Colors.black,
 
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(30)
                 ,topRight: Radius.circular(30), bottomRight: Radius.circular(30))
             ),
-            child: Text(widget.message.msg, style: TextStyle(fontSize: 15,
-            color: Colors.white),
+            child:
+                widget.message.type== Type.text?
+            Text(widget.message.msg, style: TextStyle(fontSize: 15,
+            color: Colors.white)
           
-            ),
+            ):
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: CachedNetworkImage(
+
+                    imageUrl: widget.message.msg,
+                     placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2,),
+                    errorWidget: (context, url, error) =>
+                      Icon(Icons.image_aspect_ratio, size: 70, color: Colors.white,),
+
+                  ),//We have used this for the display picture, using CachedNetworkImage
+                )
           ),
         ),
         Row(
@@ -73,7 +90,10 @@ class _MessageCardState extends State<MessageCard> {
       children: [
 
         Padding(
-            padding: EdgeInsets.only(left: mq.width*0.04),
+            padding: EdgeInsets.all(widget.message.type==Type.image?
+            mq.width*0.03:
+            mq.width*0.04
+            ),
             child: Text(MyDateUtil.getFormattedTime(context: context, time: widget.message.sent),
   style: TextStyle(fontSize: 13, color: Colors.black54),)),
         //Message Content
@@ -88,10 +108,25 @@ class _MessageCardState extends State<MessageCard> {
                     ,topRight: Radius.circular(30),
                     bottomLeft: Radius.circular(30))
             ),
-            child: Text(widget.message.msg, style: TextStyle(fontSize: 15,
-                color: Colors.white),
+            child: widget.message.type== Type.text?
+                //Then show text
+            Text(widget.message.msg, style: TextStyle(fontSize: 15,
+                color: Colors.white)
 
-            ),
+            ):
+                //Else show image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: CachedNetworkImage(
+
+                imageUrl: widget.message.msg,
+                placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2,),
+
+                errorWidget: (context, url, error) =>
+                    Icon(Icons.image_aspect_ratio, size: 70, color: Colors.white,),
+
+              ),//We have used this for the display picture, using CachedNetworkImage
+            )
           ),
         ),
 
