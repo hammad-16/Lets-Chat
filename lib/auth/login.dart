@@ -137,12 +137,12 @@ class _login extends State<login> {
                 onPressed: (){
                   _handleGoogleClick();
 
-                }, icon:Image.asset('images/google_dark.jpg', height: mq.height* 0.03),
+                },
                 label: RichText(text: TextSpan(
                   style: TextStyle(color: Colors.white,fontSize: 19),
                   children: [
-                    TextSpan(text:"Log in with ", style: TextStyle(fontWeight: FontWeight.w300)),
-                    TextSpan(text:"Google",style: TextStyle(fontWeight: FontWeight.w700)),
+                    TextSpan(text:"Sign in to ", style: TextStyle(fontWeight: FontWeight.w300)),
+                    TextSpan(text:"Matrix.org",style: TextStyle(fontWeight: FontWeight.w700)),
                   ],),
 
 
