@@ -71,7 +71,7 @@ class APIs {
         .doc(user.uid).set(Chatuser.toJson()));
   }
 
-  // For getting all data from firestore database
+  // For getting all user data from firestore database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers() {
     return firestore.collection('users')
         .where('id', isNotEqualTo: (user.uid))
@@ -119,6 +119,23 @@ class APIs {
 
           });
 
+  }
+
+  //For getting specific user info
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserInfo(
+      ChatUser chatUser)  {
+    return firestore.collection('users')
+        .where('id', isEqualTo: chatUser.id)
+        .snapshots();
+  }
+
+  //Update online or last active status of user
+  static Future<void> updateActiveStatus(bool isOnline) async{
+    firestore.collection('users')
+        .doc(user.uid).update({'is_online':isOnline,
+      'last_active': DateTime.now().
+      millisecondsSinceEpoch.toString()
+        });
   }
 
   ///Chat Screen Related APIs*********************

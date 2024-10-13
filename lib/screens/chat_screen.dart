@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chatting/helper/my_date_util.dart';
 import 'package:chatting/models/chat_user.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
@@ -151,46 +152,68 @@ class _ChatScreenState extends State<ChatScreen> {
   {
     return InkWell(
       onTap: (){},
-      child: Row(
-        children: [
-          IconButton(onPressed:()=>Navigator.pop(context),
-            icon: Icon(Icons.arrow_back),
-            color: Colors.black54,
-          ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(mq.height* 0.3),
-            child: CachedNetworkImage(
-              width: mq.height*.055,
-              height: mq.height* .05,
-              imageUrl: widget.user.image,
-              // placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) =>const CircleAvatar(
-                child: Icon(Icons.person),
-              ),
-            ),//We have used this for the display picture, using CachedNetworkImage
-          ),
-          SizedBox(width:10),
-          Column(
-            mainAxisAlignment:MainAxisAlignment.center ,
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: StreamBuilder(
+        stream: APIs.getUserInfo(widget.user) ,
+        builder: (context, snapshot){
+          final data = snapshot.data?.docs;
+          final names = data?.map((e) => ChatUser.fromJson(e.data())).toList() ??[];
+          // Remember mapping, an alternative to traverse the list, return an empty list, if no data available.
+
+
+
+
+
+
+          return Row(
             children: [
-              //User Name
-              Text(widget.user.name, style: const TextStyle(
-                fontSize: 16, color: Colors.black87,
-                  fontWeight: FontWeight.w500
-              ),),
-              SizedBox(height: 2),
-              // Last Active Time of the user
-              Text("Last seen not available", style: const TextStyle(
-                  fontSize: 13, color: Colors.black54,
-                  fontWeight: FontWeight.w500
-              ),),
+              IconButton(onPressed:()=>Navigator.pop(context),
+                icon: Icon(Icons.arrow_back),
+                color: Colors.black54,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(mq.height* 0.3),
+                child: CachedNetworkImage(
+                  width: mq.height*.055,
+                  height: mq.height* .05,
+                  imageUrl: names.isNotEmpty ? names[0].image  : widget.user.image,
+                  // placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) =>const CircleAvatar(
+                    child: Icon(Icons.person),
+                  ),
+                ),//We have used this for the display picture, using CachedNetworkImage
+              ),
+              SizedBox(width:10),
+              Column(
+                mainAxisAlignment:MainAxisAlignment.center ,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //User Name
+                  Text(names.isNotEmpty?names[0].name:widget.user.name, style: const TextStyle(
+                      fontSize: 16, color: Colors.black87,
+                      fontWeight: FontWeight.w500
+                  ),),
+                  SizedBox(height: 2),
+                  // Last Active Time of the user
+                  Text(names.isNotEmpty ?
+                      names[0].isOnline? 'Online'
+                      : MyDateUtil.getLastActiveTime(context: context, lastActive: names[0].lastActive)
+
+                  : MyDateUtil.getLastActiveTime(
+                      context: context,
+                      lastActive: widget.user.lastActive)
+                    , style: const TextStyle(
+                      fontSize: 13, color: Colors.black54,
+                      fontWeight: FontWeight.w500
+                  ),),
+                ],
+              )
+
+
             ],
-          )
-      
-      
-        ],
-      ),
+          );
+
+        }
+      )
     );
 
   }
