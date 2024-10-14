@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chatting/screens/profile_screen.dart';
+import 'package:chatting/screens/view_profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     APIs.getSelfInfo();
     //For setting user status to active
-    APIs.updateActiveStatus(true);
+
     //For updating user active status according to lifecycle events
     //resume -> active or online
     //pause -> inactive or offline
@@ -40,10 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
     SystemChannels.lifecycle.setMessageHandler((message)
     {
       log('Message: $message');
-      if(message.toString().contains('pause'))
-        APIs.updateActiveStatus(false);
-      if(message.toString().contains('resume')) {
-        APIs.updateActiveStatus(true);
+      if(APIs.auth.currentUser!=null) {
+        if (message.toString().contains('pause'))
+          APIs.updateActiveStatus(false);
+        if (message.toString().contains('resume')) {
+          APIs.updateActiveStatus(true);
+        }
       }
       return Future.value(message);
     });

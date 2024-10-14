@@ -10,7 +10,7 @@ class MyDateUtil
     return "";
   }
   // Get last message time ( used in chat user card)
-  static String getLastMessageTime({required BuildContext context, required String time})
+  static String getLastMessageTime({required BuildContext context,  required String time,  bool showYear =false})
   {
     final DateTime sent = DateTime.fromMillisecondsSinceEpoch(int.parse(time));
     final DateTime now = DateTime.now();
@@ -18,7 +18,7 @@ class MyDateUtil
       {
         return TimeOfDay.fromDateTime(sent).format(context);
       }
-    return '${sent.day} ${_getMonth(sent)}';
+    return showYear==true? '${sent.day} ${_getMonth(sent)} ${sent.year}':'${sent.day} ${_getMonth(sent)}';
   }
   //get formatted last active time of user in chat screen
   static String getLastActiveTime(

@@ -33,41 +33,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
       //For hiding keyboard by clicking anywhere on screen
       onTap: ()=> FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: AppBar(
-      
-          title: const Text('Profile Screen',
-          ),
-      
-      
-          backgroundColor: Colors.black,),
-      
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: FloatingActionButton.extended(onPressed: () async {
-            Dialogs.showProgressBar(context);
-            //This will show progress dialog
-            //This will sign out the app
-            await APIs.auth.signOut().then((value) async {
-              await GoogleSignIn().signOut().then((value){
-                //hiding progress dialog
-                Navigator.pop(context);
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>login()));
-              });
-      
-            });
-          }, icon: Icon(Icons.logout, color: Colors.white,) ,
-            label: Text("Logout",
-            style: TextStyle(color: Colors.white,
-            fontSize: 15),
+          appBar: AppBar(
+
+            title: const Text('Profile Screen',
             ),
-            backgroundColor: Colors.redAccent,
-      
-      
+
+
+            backgroundColor: Colors.black,),
+
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: FloatingActionButton.extended(onPressed: () async {
+              Dialogs.showProgressBar(context);
+              //This will show progress dialog
+              //This will sign out the app
+              await APIs.auth.signOut().then((value) async {
+                await GoogleSignIn().signOut().then((value){
+                  //hiding progress dialog
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>login()));
+                });
+
+              });
+            }, icon: Icon(Icons.logout, color: Colors.white,) ,
+              label: Text("Logout",
+                style: TextStyle(color: Colors.white,
+                    fontSize: 15),
+              ),
+              backgroundColor: Colors.redAccent,
+
+
+            ),
           ),
-        ),
-      
-        // builder is helpful in dynamically showing the cards and also manages the memory well
-        body:
+
+          // builder is helpful in dynamically showing the cards and also manages the memory well
+          body:
           Form(
             key: _formKey,
             child: Padding(
@@ -94,7 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
 
 
-                            //Image from server
+                        //Image from server
                         ClipRRect(
                           borderRadius: BorderRadius.circular(mq.height* 0.1),
                           child: CachedNetworkImage(
@@ -119,30 +119,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                               color: Colors.white,
                               shape: CircleBorder(),
-                          child: Icon(Icons.edit)),
+                              child: Icon(Icons.edit)),
                         )
                       ],
                     ),
                   ),
                   SizedBox(height: mq.height* 0.03 ,),
-                      
+
                   Text(widget.user.email, style: TextStyle(color: Colors.black54, fontSize:16),),
-                      
+
                   SizedBox(height: mq.height* 0.03 ,),
-                      
+
                   TextFormField(
                     onSaved: (val)=>APIs.me.name=val??'',
                     validator: (val)=> val!=null && val.isNotEmpty? null : "Required Field",
                     initialValue: widget.user.name,
                     decoration: InputDecoration(
-                     border: const OutlineInputBorder()
-                    , prefixIcon: Icon(Icons.person_2, color: Colors.black),
-                      hintText: "Enter Your Name",
-                      label:  Text("Name")
+                        border: const OutlineInputBorder()
+                        , prefixIcon: Icon(Icons.person_2, color: Colors.black),
+                        hintText: "Enter Your Name",
+                        label:  Text("Name")
                     ),
                   ),
                   SizedBox(height: mq.height* 0.03 ,),
-            
+
                   GestureDetector(
                     onTap: ()=>FocusScope.of(context).unfocus(
                     ),
@@ -173,21 +173,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(height: mq.height* 0.05 ,),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(shape: StadiumBorder(),
-                    backgroundColor: Colors.black,
-                    fixedSize: Size(mq.width*0.5, mq.height*0.06 )),
+                        backgroundColor: Colors.black,
+                        fixedSize: Size(mq.width*0.5, mq.height*0.06 )),
                     onPressed: (){
                       if(_formKey.currentState!.validate())
-                        {
-                          _formKey.currentState!.save();
-                          APIs.updateUserInfo().then((value){
-                            Dialogs.showSnackbar(
-                                context,"Profile updated successfully");
-                          });
-                          log('inside validator');
-                          
-                        }
+                      {
+                        _formKey.currentState!.save();
+                        APIs.updateUserInfo().then((value){
+                          Dialogs.showSnackbar(
+                              context,"Profile updated successfully");
+                        });
+                        log('inside validator');
+
+                      }
                     },
-                  icon:Icon(Icons.edit, color: Colors.white,), label: Text("UPDATE", style: TextStyle(fontSize: 16, color: Colors.white), ),)
+                    icon:Icon(Icons.edit, color: Colors.white,), label: Text("UPDATE", style: TextStyle(fontSize: 16, color: Colors.white), ),)
                 ],),
               ),
             ),
@@ -202,66 +202,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight:  Radius.circular(30)))
         ,
         builder: (_)
-    {
+        {
 
-      return ListView(
-        shrinkWrap: true,
-        padding: EdgeInsets.only(top: mq.height*0.04, bottom: mq.height*0.15),
-        children: [
-          const Text("Choose a Profile Picture", textAlign:TextAlign.center,style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
-          SizedBox(height: mq.height*0.02,)
-          ,Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
+          return ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.only(top: mq.height*0.04, bottom: mq.height*0.15),
             children: [
-              //Picking pfp from gallery
-              ElevatedButton(onPressed: () async {
-                final ImagePicker picker = ImagePicker();
-                //Picking an image
-                final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-                if(image!=null) {
-                  log('Image path: ${image.path}--MimeType: ${image.mimeType}');
-                  setState(() {
-                    _image=image.path;
-                  });
-                  APIs.updateProfilePicture(File(_image!));
-                  Navigator.pop(context);//This will subsequently hide the bottom sheet
-                }
-              },
-                child: Image.asset("images/select_image.png"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
+              const Text("Choose a Profile Picture", textAlign:TextAlign.center,style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
+              SizedBox(height: mq.height*0.02,)
+              ,Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly ,
+                children: [
+                  //Picking pfp from gallery
+                  ElevatedButton(onPressed: () async {
+                    final ImagePicker picker = ImagePicker();
+                    //Picking an image
+                    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                    if(image!=null) {
+                      log('Image path: ${image.path}--MimeType: ${image.mimeType}');
+                      setState(() {
+                        _image=image.path;
+                      });
+                      APIs.updateProfilePicture(File(_image!));
+                      Navigator.pop(context);//This will subsequently hide the bottom sheet
+                    }
+                  },
+                      child: Image.asset("images/select_image.png"),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
 
-                  fixedSize: Size(mq.width*0.3, mq.height*0.15)
-                )
-              ),
-              //Taking picture from camera button
-              ElevatedButton(onPressed: () async {
-                final ImagePicker picker = ImagePicker();
-                //Picking an image
-                final XFile? image = await picker.pickImage(source: ImageSource.camera);
-                if(image!=null) {
-                  log('Image path: ${image.path}');
-                  setState(() {
-                    _image=image.path;
-                  });
-                  APIs.updateProfilePicture(File(_image!));
-                  Navigator.pop(context);//This will subsequently hide the bottom sheet
-                }
-              },
-                  child: Image.asset("images/camera.png"),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      fixedSize: Size(mq.width*0.3, mq.height*0.15)
-                  )
-              ),
+                          fixedSize: Size(mq.width*0.3, mq.height*0.15)
+                      )
+                  ),
+                  //Taking picture from camera button
+                  ElevatedButton(onPressed: () async {
+                    final ImagePicker picker = ImagePicker();
+                    //Picking an image
+                    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+                    if(image!=null) {
+                      log('Image path: ${image.path}');
+                      setState(() {
+                        _image=image.path;
+                      });
+                      APIs.updateProfilePicture(File(_image!));
+                      Navigator.pop(context);//This will subsequently hide the bottom sheet
+                    }
+                  },
+                      child: Image.asset("images/camera.png"),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          fixedSize: Size(mq.width*0.3, mq.height*0.15)
+                      )
+                  ),
+                ],
+              )
             ],
-          )
-        ],
 
-      );
+          );
 
-      
-    }
+
+        }
     );
 
   }
